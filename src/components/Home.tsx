@@ -109,26 +109,32 @@ const orderViaWhatsApp = () => {
     return;
   }
 
-  const phoneNumber = "919442351404"; // include country code
+  const phoneNumber = "919442351404"; // Include country code (no '+' sign)
+
+  // ✅ Use INR formatting
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2,
+    }).format(amount);
+
+  // ✅ Start message based on language
   let message =
     language === "EN"
       ? `Hello! My name is ${customerName}.\nMobile: ${customerPhone}\n\nI would like to order:\n\n`
       : `வணக்கம்! என் பெயர் ${customerName}.\nமொபைல்: ${customerPhone}\n\nநான் ஆர்டர் செய்ய விரும்புகிறேன்:\n\n`;
 
+  // ✅ Add product list with ₹ price
   cart.forEach((item) => {
     const itemTotal = item.product.price * item.quantity;
-    message += `${item.quantity}x ${item.product.name} - ${formatCurrency(
-      itemTotal
-    )}\n`;
+    message += `${item.quantity}x ${item.product.name} - ${formatCurrency(itemTotal)}\n`;
   });
 
-  message += `\n${
-    language === "EN" ? "Total" : "மொத்தம்"
-  }: ${formatCurrency(getTotalPrice())}`;
+  // ✅ Add total in ₹
+  message += `\n${language === "EN" ? "Total" : "மொத்தம்"}: ${formatCurrency(getTotalPrice())}`;
 
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-    message
-  )}`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, "_blank");
 };
 
