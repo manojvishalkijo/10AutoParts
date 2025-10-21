@@ -90,7 +90,7 @@ function App() {
       return;
     }
 
-    const phoneNumber = "918838921974"; // include country code
+    const phoneNumber = "919442351404"; // include country code
     let message = language === "EN"
       ? `Hello! My name is ${customerName}.\nMobile: ${customerPhone}\n\nI would like to order:\n\n`
       : `வணக்கம்! என் பெயர் ${customerName}.\nமொபைல்: ${customerPhone}\n\nநான் ஆர்டர் செய்ய விரும்புகிறேன்:\n\n`;
