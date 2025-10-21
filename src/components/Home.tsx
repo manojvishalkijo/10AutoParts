@@ -59,53 +59,83 @@ function App() {
     { id: 9, name: "LED Headlight", category: "Lighting", price: 1999, image: "https://images.pexels.com/photos/1149831/pexels-photo-1149831.jpeg?auto=compress&cs=tinysrgb&w=800", description: "High-intensity LED headlight for motorcycles", type: "Bike" },
   ];
   
-  const addToCart = (product: Product) => {
-    const existingItem = cart.find((item) => item.product.id === product.id);
-    if (existingItem) {
-      setCart(cart.map((item) =>
+ const addToCart = (product: Product) => {
+  const existingItem = cart.find((item) => item.product.id === product.id);
+  if (existingItem) {
+    setCart(
+      cart.map((item) =>
         item.product.id === product.id
           ? { ...item, quantity: item.quantity + 1 }
           : item
-      ));
-    } else {
-      setCart([...cart, { product, quantity: 1 }]);
-    }
-    setIsCartOpen(true);
-  };
+      )
+    );
+  } else {
+    setCart([...cart, { product, quantity: 1 }]);
+  }
+  setIsCartOpen(true);
+};
 
-  const updateQuantity = (productId: number, change: number) => {
-    setCart(cart.map((item) =>
-      item.product.id === productId
-        ? { ...item, quantity: Math.max(0, item.quantity + change) }
-        : item
-    ).filter(item => item.quantity > 0));
-  };
+const updateQuantity = (productId: number, change: number) => {
+  setCart(
+    cart
+      .map((item) =>
+        item.product.id === productId
+          ? { ...item, quantity: Math.max(0, item.quantity + change) }
+          : item
+      )
+      .filter((item) => item.quantity > 0)
+  );
+};
 
-  const getTotalPrice = () => cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+const getTotalPrice = () =>
+  cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
-  const orderViaWhatsApp = () => {
-    if (cart.length === 0) return;
-    if (!customerName || !customerPhone) {
-      alert(language === "EN" ? "Please enter your name and mobile number!" : "உங்கள் பெயர் மற்றும் மொபைல் எண்ணை உள்ளிடவும்!");
-      return;
-    }
+const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
 
-    const phoneNumber = "919442351404"; // include country code
-    let message = language === "EN"
+const orderViaWhatsApp = () => {
+  if (cart.length === 0) return;
+  if (!customerName || !customerPhone) {
+    alert(
+      language === "EN"
+        ? "Please enter your name and mobile number!"
+        : "உங்கள் பெயர் மற்றும் மொபைல் எண்ணை உள்ளிடவும்!"
+    );
+    return;
+  }
+
+  const phoneNumber = "919442351404"; // include country code
+  let message =
+    language === "EN"
       ? `Hello! My name is ${customerName}.\nMobile: ${customerPhone}\n\nI would like to order:\n\n`
       : `வணக்கம்! என் பெயர் ${customerName}.\nமொபைல்: ${customerPhone}\n\nநான் ஆர்டர் செய்ய விரும்புகிறேன்:\n\n`;
 
-    cart.forEach((item) => {
-      message += `${item.quantity}x ${item.product.name} - $${(item.product.price * item.quantity).toFixed(2)}\n`;
-    });
+  cart.forEach((item) => {
+    const itemTotal = item.product.price * item.quantity;
+    message += `${item.quantity}x ${item.product.name} - ${formatCurrency(
+      itemTotal
+    )}\n`;
+  });
 
-    message += `\n${language === "EN" ? "Total" : "மொத்தம்"}: $${getTotalPrice().toFixed(2)}`;
+  message += `\n${
+    language === "EN" ? "Total" : "மொத்தம்"
+  }: ${formatCurrency(getTotalPrice())}`;
 
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-  };
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+    message
+  )}`;
+  window.open(whatsappUrl, "_blank");
+};
 
-  const filteredProducts = selectedCategory === "All" ? products : products.filter(p => p.type === selectedCategory);
+const filteredProducts =
+  selectedCategory === "All"
+    ? products
+    : products.filter((p) => p.type === selectedCategory);
 
   // Text translations
   const texts = {
