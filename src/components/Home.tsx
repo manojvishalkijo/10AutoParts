@@ -400,7 +400,7 @@ const filteredProducts =
 
     <div className="text-center mt-12">
       <button
-        onClick={() => window.open('https://wa.me/1234567890', '_blank')}
+        onClick={() => window.open('https://wa.me/919442351404', '_blank')}
         className="inline-flex items-center space-x-3 bg-[#25D366] text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#20BD5A] transition-colors"
       >
         <Phone className="h-6 w-6" />
